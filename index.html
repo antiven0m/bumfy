@@ -1,0 +1,2101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>🅱️UMFY</title>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer"/>
+  <style>
+    :root{
+      --bg:#0b0b0b;
+      --fg:#e8e8e8;
+      --muted:#a8a8a8;
+      --line:#2a2a2a;
+      --panel:#0e0e0e;
+      --field:#121212;
+      --field2:#0f0f0f;
+
+      --accent:#7fb5ff;
+
+      --ok:#67ffb3;
+      --bad:#ff4d4d;
+      --warn:#ffd24d;
+
+      --p1:#ffb3ba;
+      --p2:#ffdfba;
+      --p3:#ffffba;
+      --p4:#baffc9;
+      --p5:#bae1ff;
+      --p6:#d7baff;
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; margin:0; background:var(--bg); color:var(--fg); font-family:var(--sans); }
+    body{ overflow:hidden; }
+
+    .app{
+      height:100vh;
+      width:100vw;
+      display:grid;
+      grid-template-columns: minmax(520px, 40vw) 1fr;
+      gap:0;
+    }
+
+    
+    .accentLine{
+      height:2px;
+      background: var(--accent);
+      opacity:.95;
+    }
+    .accentBorder{
+      border:1px solid var(--line);
+      background:var(--panel);
+      position:relative;
+    }
+    .accentBorder::before{
+      content:"";
+      position:absolute;
+      left:-1px; top:-1px; bottom:-1px;
+      width:3px;
+      background: var(--accent);
+      opacity:.85;
+    }
+
+    
+    .left{
+      border-right:1px solid var(--line);
+      display:grid;
+      grid-template-rows: auto 1fr auto;
+      min-width:560px;
+      background:#0c0c0c;
+      min-height:0;
+    }
+
+    .leftTop{
+      display:grid;
+      grid-template-columns: auto 1fr auto;
+      align-items:center;
+      gap:12px;
+      padding:12px 12px 10px;
+      border-bottom:1px solid var(--line);
+      background:#0c0c0c;
+      min-width:0;
+    }
+
+    
+    .brand{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      min-width:0;
+    }
+    .brandTitle{
+      font-size:28px;
+      font-weight:900;
+      letter-spacing: 1.5px;
+      line-height:1;
+      margin:0;
+      color:#f5f5f5;
+      text-shadow:
+        0 0 10px rgba(186,225,255,.30),
+        0 0 18px rgba(215,186,255,.22),
+        0 0 26px rgba(255,179,186,.16);
+      position:relative;
+      animation: glowPulse 2.2s ease-in-out infinite;
+      user-select:none;
+      white-space:nowrap;
+    }
+    @keyframes glowPulse{
+      0%,100%{
+        text-shadow:
+          0 0 10px rgba(186,225,255,.28),
+          0 0 18px rgba(215,186,255,.20),
+          0 0 26px rgba(255,179,186,.14);
+        filter: brightness(1.0);
+      }
+      50%{
+        text-shadow:
+          0 0 14px rgba(186,225,255,.44),
+          0 0 24px rgba(215,186,255,.33),
+          0 0 34px rgba(255,179,186,.24);
+        filter: brightness(1.08);
+      }
+    }
+
+    
+    .hdrConn{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+    .hdrConn .urlWrap{
+      flex: 1 1 auto;
+      min-width: 260px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .hdrConn label{
+      margin:0;
+      font-size:11px;
+      color:var(--muted);
+      white-space:nowrap;
+    }
+    .hdrConn input[type="text"]{
+      height:34px;
+      padding:7px 9px;
+      font-size:13px;
+      font-family:var(--mono);
+    }
+    .hdrRight{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      justify-content:flex-end;
+      min-width:0;
+    }
+
+    .status{
+      display:flex; align-items:center; gap:8px;
+      font-size:12px; color:var(--muted);
+      min-width:0;
+    }
+    .status .mono{
+      font-family:var(--mono);
+      overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+      max-width: 34ch;
+      color: rgba(232,232,232,.72);
+    }
+    .dot{ width:10px; height:10px; border-radius:50%; background:#444; border:1px solid #555; }
+    .dot.ok{ background:var(--ok); border-color:var(--ok); }
+    .dot.bad{ background:var(--bad); border-color:var(--bad); }
+    .dot.warn{ background:var(--warn); border-color:var(--warn); }
+
+    
+    .leftMid{
+      padding:12px;
+      display:grid;
+      grid-template-rows: 1fr;
+      min-height:0;
+      overflow:auto; 
+    }
+
+    .menuGrid{
+      display:grid;
+      grid-template-rows: auto auto minmax(320px, 1fr);
+      gap:12px;
+      min-height:0;
+    }
+    .block{
+      min-height:0;
+      overflow:hidden;
+      padding:10px;
+    }
+    .block h3{
+      margin:0 0 10px 0;
+      font-size:12px;
+      font-weight:900;
+      color:#d8d8d8;
+      text-transform:uppercase;
+      letter-spacing:.9px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    label{ display:block; font-size:12px; color:var(--muted); margin:10px 0 6px; }
+    input[type="text"], input[type="number"], textarea, select{
+      width:100%;
+      background:var(--field);
+      color:var(--fg);
+      border:1px solid var(--line);
+      padding:9px 10px;
+      outline:none;
+      font-size:14px;
+      font-family:var(--sans);
+    }
+    input[type="number"]{ text-align:right; font-variant-numeric: tabular-nums; }
+    input.mono{ font-family:var(--mono); }
+    input:focus, textarea:focus, select:focus{
+      border-color: rgba(186,225,255,.55);
+      box-shadow: 0 0 0 2px rgba(186,225,255,.10);
+    }
+    textarea{
+      resize:none;
+      line-height:1.35;
+      overflow:auto;
+    }
+
+    .row{ display:grid; gap:10px; }
+    .row2{ grid-template-columns: 1fr 1fr; }
+    .row3{ grid-template-columns: 1fr 1fr 1fr; }
+
+    .inline{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+    .check{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      user-select:none;
+      white-space:nowrap;
+      color:var(--muted);
+      font-size:12px;
+    }
+    .check input{ width:auto; }
+
+
+    
+    .nums3info{ grid-template-columns: 110px 110px 1fr; align-items:end; }
+    .nums3tight{ grid-template-columns: 110px 110px 120px; align-items:end; justify-content:start; }
+    .nums3seed{ grid-template-columns: 150px 140px 110px; align-items:end; justify-content:start; }
+    .numSm input[type="number"], input.numSm[type="number"]{ max-width: 120px; }
+    .numMd input[type="number"], input.numMd[type="number"]{ max-width: 160px; }
+    .helpLine{ font-family: var(--mono); font-size:12px; color: rgba(232,232,232,.70); }
+    
+    .nums3{
+      grid-template-columns: 120px 120px 1fr;
+      align-items:end;
+    }
+    .nums2{
+      grid-template-columns: 120px 1fr;
+      align-items:end;
+    }
+
+    
+    .promptsWrap{
+      display:grid;
+      grid-template-rows: auto 1fr;
+      gap:10px;
+      min-height:0;
+    }
+    .macroRow{
+      display:grid;
+      grid-template-columns: 1fr 180px;
+      gap:10px;
+      align-items:end;
+    }
+    .promptStack{
+      display:grid;
+      grid-template-rows: 1fr 0.8fr;
+      gap:10px;
+      min-height:0;
+    }
+    #posPrompt{ min-height: 180px; }
+    #negPrompt{ min-height: 120px; }
+    .promptBox{
+      display:grid;
+      grid-template-rows: auto 1fr;
+      min-height:0;
+    }
+    .promptBox textarea{
+      height:100%;
+      min-height:0;
+      border-left: 3px solid transparent;
+    }
+    .promptBox.pos textarea{ border-left-color: rgba(186,255,201,.45); }
+    .promptBox.neg textarea{ border-left-color: rgba(255,179,186,.40); }
+
+    
+    .artistRow{
+      display:grid;
+      grid-template-columns: 200px 1fr;
+      gap:10px;
+      align-items:stretch;
+      min-height:0;
+    }
+    .artistRow textarea{ height: 72px; }
+
+    
+    .actionBar{
+      border-top:1px solid var(--line);
+      background:#0c0c0c;
+      padding:10px 12px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .btns{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+
+    button{
+      border:1px solid var(--line);
+      background:#101010;
+      color:var(--fg);
+      padding:10px 12px;
+      cursor:pointer;
+      font-weight:900;
+      letter-spacing:.2px;
+      position:relative;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    button:hover{ border-color:#3a3a3a; }
+    button:disabled{ opacity:.55; cursor:not-allowed; }
+    .ghost{ background:transparent; }
+
+    .cta{
+      border-color: rgba(186,225,255,.45);
+      box-shadow: 0 0 0 2px rgba(186,225,255,.08) inset;
+      padding:12px 14px;
+      font-size:14px;
+    }
+    .danger{
+      border-color: rgba(255,77,77,.55);
+      box-shadow: 0 0 0 2px rgba(255,77,77,.10) inset;
+      padding:12px 14px;
+      font-size:14px;
+    }
+    .spinner{
+      width:14px; height:14px;
+      border:2px solid #3a3a3a;
+      border-top-color: #f0f0f0;
+      border-radius:50%;
+      animation: spin .8s linear infinite;
+      display:none;
+    }
+    .spinner.on{ display:inline-block; }
+    @keyframes spin{ to{ transform: rotate(360deg);} }
+
+    
+    .right{
+      display:grid;
+      grid-template-rows: auto 1fr;
+      min-width: 600px;
+      min-height:0;
+      overflow:hidden;
+    }
+    .rightTop{
+      border-bottom:1px solid var(--line);
+      background:#0c0c0c;
+      padding:10px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .rightTop .leftGroup{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .gallery{
+      padding:12px;
+      display:grid;
+      grid-template-columns: repeat( auto-fill, minmax(320px, 1fr) );
+      gap:12px;
+      align-items:start;
+      align-content:start;
+      overflow:auto;
+      min-height:0;
+    }
+    .card{
+      border:1px solid var(--line);
+      background:var(--panel);
+      display:grid;
+      grid-template-rows: auto auto;
+      position:relative;
+    }
+    .card img{
+      width:100%;
+      height:auto;
+      display:block;
+      background:#111;
+      position:relative;
+      z-index:1;
+    }
+    .meta{
+      padding:10px;
+      border-top:1px solid var(--line);
+      display:grid;
+      gap:8px;
+      font-size:12px;
+      color:var(--muted);
+      min-height: 96px;
+      position:relative;
+      z-index:1;
+    }
+    .meta b{ color:var(--fg); font-weight:900; }
+    .metaTop{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    }
+    .tagline{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .previewText{
+      background:var(--field2);
+      border:1px solid var(--line);
+      padding:8px;
+      white-space:pre-wrap;
+      word-break:break-word;
+      font-family:var(--mono);
+      font-size:12px;
+      color:#d8d8d8;
+      max-height: 120px;
+      overflow:auto;
+    }
+    .pager{
+      display:flex; gap:8px; align-items:center;
+      color:var(--muted);
+      font-size:12px;
+      flex-wrap:wrap;
+    }
+
+    
+    .modal{
+      position:fixed;
+      inset:0;
+      background: rgba(0,0,0,.75);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:50;
+      padding:20px;
+    }
+    .modal.on{ display:flex; }
+    .modalInner{
+      max-width: min(980px, 96vw);
+      max-height: min(92vh, 980px);
+      border:1px solid var(--line);
+      background:#0b0b0b;
+      display:grid;
+      grid-template-rows: auto 1fr auto;
+      width:100%;
+      height:100%;
+    }
+    .modalBar{
+      padding:10px 12px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      color:var(--muted);
+      font-size:12px;
+    }
+    .modalBody{
+      padding:12px;
+      overflow:auto;
+      display:grid;
+      gap:12px;
+      background:#090909;
+    }
+    .modalFooter{
+      padding:10px 12px;
+      border-top:1px solid var(--line);
+      display:flex;
+      justify-content:flex-end;
+      gap:8px;
+      background:#0b0b0b;
+    }
+    .helpLine{
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .q{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:999px;border:1px solid var(--line);color:rgba(232,232,232,.75);font-size:11px;margin-left:6px;cursor:help;background:rgba(255,255,255,.03);user-select:none;}
+    .q:hover{border-color:var(--accent);color:#fff;}
+    .iconBtn{border:1px solid var(--line);background:rgba(10,10,10,.5);padding:6px 7px;border-radius:10px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;}
+    .iconBtn:hover{border-color:#3a3a3a;}
+    .iconBtn:disabled{opacity:.55;cursor:not-allowed;}
+    .metaActions{display:flex;align-items:center;gap:6px;}
+    .promptLine{background:var(--field2);border:1px solid var(--line);padding:8px;font-family:var(--mono);font-size:12px;color:#d8d8d8;white-space:pre-wrap;word-break:break-word;max-height:84px;overflow:auto;cursor:pointer;}
+    .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:rgba(10,10,10,.92);border:1px solid var(--line);padding:10px 12px;border-radius:14px;font-size:12px;color:rgba(232,232,232,.85);z-index:80;display:none;}
+    .toast.on{display:block;}
+
+    .topActions{display:flex;align-items:center;justify-content:flex-end;gap:10px;min-width:0;}
+    .status.compact{background:transparent;border:1px solid var(--line);padding:8px 10px;border-radius:14px;}
+    .status.compact .mono{max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .queuePanel{border-top:1px solid var(--line);background:#0b0b0b;padding:10px 12px;display:none;gap:10px;}
+    .queuePanel.on{display:grid;}
+    .queueHead{display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--muted);font-size:12px;}
+    .queuePre{margin:0;border:1px solid var(--line);background:var(--field2);padding:10px;border-radius:14px;max-height:220px;overflow:auto;font-size:12px;color:#d8d8d8;}
+    .progressPill{display:inline-flex;align-items:center;gap:6px;padding:3px 8px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:rgba(232,232,232,.80);font-size:11px;}
+    .progressPill b{font-weight:900;color:var(--fg);}
+    .hide{display:none!important;}
+    input[type="number"]{text-align:right;}
+    .nums3info,.nums3tight,.nums3seed{grid-template-columns: 1fr 1fr 1fr;align-items:end;}
+    .numSm input[type="number"], input.numSm[type="number"],
+    .numMd input[type="number"], input.numMd[type="number"]{max-width:none;width:100%;}
+
+
+
+    @media (max-width: 1200px){
+      .app{ grid-template-columns: 1fr; }
+      .left{ min-width: unset; border-right:none; border-bottom:1px solid var(--line); }
+      .right{ min-width: unset; }
+      .gallery{ grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+      .leftTop{ grid-template-columns: auto 1fr; grid-template-rows: auto auto; }
+      .hdrRight{ justify-content:flex-start; }
+      .hdrConn .urlWrap{ min-width: 220px; }
+      .macroRow{ grid-template-columns: 1fr; }
+      .nums3info, .nums3tight, .nums3seed{ grid-template-columns: 1fr 1fr 1fr; }
+      .nums2{ grid-template-columns: 1fr 1fr; }
+      .artistRow{ grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="left">
+    <div class="leftTop">
+      <div class="brand">
+        <div class="brandTitle">🅱️UMFY</div>
+        <div class="accentLine"></div>
+      </div>
+      <div class="topActions">
+        <div class="status compact" title="Connection status">
+          <span class="dot" id="connDot"></span>
+          <span id="connText">disconnected</span>
+          <span class="mono" id="connDetail"></span>
+        </div>
+        <button id="btnSettings" class="ghost" title="Settings">
+          <i class="fa-solid fa-gear"></i><span>Settings</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="leftMid">
+      <div class="menuGrid">
+        <div class="accentBorder block">
+          <h3>
+            <span>Generation</span>
+            <label class="check" style="margin:0;">
+              <input id="toggleSecondPass" type="checkbox" checked />
+              <span>Second pass</span>
+            </label>
+            <label class="check" style="margin:0;">
+              <input id="toggleUpscale" type="checkbox" checked />
+              <span>Upscale before 2nd</span>
+            </label>
+          </h3>
+
+          <div class="row row2">
+            <div>
+              <label>Checkpoint model <span class="q" title="Main checkpoint used by the workflow.">?</span></label>
+              <select id="ckptSelect"></select>
+            </div>
+            <div>
+              <label>SDXL size preset <span class="q" title="Base latent size for SDXL. Final size depends on upscale + downscale.">?</span></label>
+              <select id="sizePreset"></select>
+            </div>
+          </div>
+
+          <div class="row nums3info">
+            <div class="numSm">
+              <label>Batch size <span class="q" title="How many images per prompt run.">?</span></label>
+              <input id="batchSize" type="number" min="1" max="64" step="1" value="1" />
+            </div>
+            <div class="numMd">
+              <label>Queue delay (ms) <span class="q" title="Delay between queued jobs when running all lines.">?</span></label>
+              <input id="queueDelay" type="number" min="0" max="5000" step="50" value="200" />
+            </div>
+            <div style="display:grid; gap:6px;">
+              <div class="helpLine" id="scaleInfo">final: —</div>
+              <div class="helpLine" id="scaleInfo2">effective: —</div>
+            </div>
+          </div>
+
+          <div class="row nums3tight">
+            <div class="numSm">
+              <label>CFG (guidance) <span class="q" title="Higher = stronger prompt adherence; too high can cause artifacts.">?</span></label>
+              <input id="cfg1" type="number" min="0" max="30" step="0.1" value="5.5" />
+            </div>
+            <div class="numSm">
+              <label id="cfg2Label">CFG (2nd pass) <span class="q" title="CFG for the second refinement pass.">?</span></label>
+              <input id="cfg2" type="number" min="0" max="30" step="0.1" value="5.5" />
+            </div>
+            <div class="numSm">
+              <label>Downscale after upscale <span class="q" title="After 2× upscale, scale back to control final resolution.">?</span></label>
+              <input id="downscale2x" type="number" min="0.10" max="1.20" step="0.01" value="0.72" />
+            </div>
+          </div>
+
+          <div class="row nums3seed">
+            <div>
+              <label>Seed mode <span class="q" title="Fixed uses the Seed + jitter. Random picks a new seed every run.">?</span></label>
+              <select id="seedMode">
+                <option value="fixed">Fixed</option>
+                <option value="random">Random</option>
+              </select>
+            </div>
+            <div class="numMd">
+              <label>Seed <span class="q" title="Base seed for reproducibility.">?</span></label>
+              <input id="seedBase" type="number" step="1" value="791" />
+            </div>
+            <div class="numSm">
+              <label>2nd pass seed offset <span class="q" title="Second pass uses Seed + offset (after jitter).">?</span></label>
+              <input id="seedOffset" type="number" step="1" value="1" />
+            </div>
+          </div>
+        </div>
+
+        <div class="accentBorder block">
+          <h3>Style lines</h3>
+          <div class="artistRow">
+            <div>
+              <label>Active line <span class="q" title="The style line used when generating a single image.">?</span></label>
+              <select id="artistSelect"></select>
+            </div>
+            <div>
+              <label>Style lines (one per line) <span class="q" title="One style/artist line per row. Blank lines and #comments are ignored.">?</span></label>
+              <textarea id="artistLines" placeholder="by artist_a&#10;in the style of artist_b&#10;artist_c"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="accentBorder block" style="min-height:0;">
+          <h3>Prompt</h3>
+
+          <div class="promptsWrap">
+            <div class="macroRow">
+              <div>
+                <label>Artist token <span class="q" title="Token in the prompt replaced with the active style line (or prefix/suffix).">?</span></label>
+                <input id="macroTarget" class="mono" type="text" value="__ARTIST__" />
+              </div>
+              <div>
+                <label>Insert mode <span class="q" title="How the style line is injected into the prompt.">?</span></label>
+                <select id="macroMode">
+                  <option value="replace">replace token</option>
+                  <option value="prefix">prefix line</option>
+                  <option value="suffix">suffix line</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="promptStack">
+              <div class="promptBox pos">
+                <label>Prompt <span class="q" title="Positive prompt text.">?</span></label>
+                <textarea id="posPrompt"></textarea>
+              </div>
+              <div class="promptBox neg">
+                <label>Negative prompt <span class="q" title="Things to avoid; applied as negative conditioning.">?</span></label>
+                <textarea id="negPrompt"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="actionBar">
+      <div class="btns">
+        <button id="btnParams" class="ghost" title="Edit generation parameters">
+          <i class="fa-solid fa-sliders"></i><span>Advanced</span>
+        </button>
+
+        <button id="btnRunOne" class="cta" title="Generate one using selected artist line">
+          <i class="fa-solid fa-bolt"></i><span>Generate</span>
+        </button>
+
+        <button id="btnRunGrid" class="cta ghost" title="Generate for all artist lines">
+          <i class="fa-solid fa-grip"></i><span>Run all lines</span>
+        </button>
+
+        <button id="btnStop" class="danger" disabled title="Stop current generation">
+          <i class="fa-solid fa-stop"></i><span>Stop</span>
+        </button>
+
+        <button id="btnStopAll" class="danger ghost" disabled title="Interrupt ComfyUI (best-effort)">
+          <i class="fa-solid fa-ban"></i><span>Interrupt</span>
+        </button>
+
+        <button id="btnClearQueue" class="ghost" title="Clear ComfyUI queue (best-effort)">
+          <i class="fa-solid fa-trash-can"></i><span>Clear queue</span>
+        </button>
+      </div>
+
+      <div class="status">
+        <span class="spinner" id="spin"></span>
+        <span id="runText">idle</span>
+        <span class="mono" id="runDetail"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="rightTop">
+      <div class="leftGroup">
+        <span class="dot" id="runDot"></span>
+        <span class="mono" id="runDetailTop"></span>
+      </div>
+      <div class="pager"><button id="btnQueue" class="ghost" title="Show queue"><i class="fa-solid fa-list"></i><span>Queue</span></button><button id="btnClearResults" class="ghost" title="Clear the gallery list"><i class="fa-solid fa-trash-can"></i><span>Clear</span></button></div>
+    </div>
+
+    <div class="queuePanel" id="queuePanel">
+      <div class="queueHead">
+        <div class="mono">Queue</div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <label class="check" style="margin:0;">
+            <input id="toggleQueueAuto" type="checkbox" checked />
+            <span>Auto refresh</span>
+          </label>
+          <button id="btnQueueRefresh" class="ghost" title="Refresh queue"><i class="fa-solid fa-rotate"></i><span>Refresh</span></button>
+          <button id="btnQueueClose" class="ghost" title="Hide queue"><i class="fa-solid fa-xmark"></i><span>Hide</span></button>
+        </div>
+      </div>
+      <pre class="queuePre mono" id="queueText">—</pre>
+    </div>
+
+    <div class="gallery" id="gallery"></div>
+  </div>
+</div>
+
+<!-- Modal: params -->
+<div class="modal" id="modal">
+  <div class="modalInner">
+    <div class="modalBar">
+      <div class="mono">Generation parameters</div>
+      <div class="btns">
+        <button id="modalClose"><i class="fa-solid fa-xmark"></i><span>Close</span></button>
+      </div>
+    </div>
+
+    <div class="modalBody">
+      <div class="accentBorder block">
+        <h3>Sampler</h3>
+        <div class="row row3">
+          <div>
+            <label>Sampler</label>
+            <select id="samplerName"></select>
+          </div>
+          <div>
+            <label>Seed jitter</label>
+            <input id="seedJitter" type="number" min="0" max="999999" step="1" value="0" />
+          </div>
+          <div class="helpLine">
+            seed jitter adds <span class="mono">0..N</span> to base seed per run (fixed mode only)
+          </div>
+        </div>
+      </div>
+
+      <div class="accentBorder block">
+        <h3>First pass</h3>
+        <div class="row row3">
+          <div>
+            <label>Steps</label>
+            <input id="steps1" type="number" min="1" max="200" step="1" value="28" />
+          </div>
+          <div>
+            <label>Scheduler</label>
+            <select id="sched1">
+              <option value="kl_optimal">kl_optimal</option>
+              <option value="karras">karras</option>
+              <option value="normal">normal</option>
+              <option value="simple">simple</option>
+              <option value="ddim_uniform">ddim_uniform</option>
+            </select>
+          </div>
+          <div>
+            <label>Denoise</label>
+            <input id="denoise1" type="number" min="0" max="1" step="0.01" value="1" />
+          </div>
+        </div>
+      </div>
+
+      <div class="accentBorder block" id="secondPassBlock">
+        <h3>Second pass</h3>
+        <div class="row row3">
+          <div>
+            <label>Steps</label>
+            <input id="steps2" type="number" min="1" max="200" step="1" value="20" />
+          </div>
+          <div>
+            <label>Scheduler</label>
+            <select id="sched2">
+              <option value="karras">karras</option>
+              <option value="kl_optimal">kl_optimal</option>
+              <option value="normal">normal</option>
+              <option value="simple">simple</option>
+              <option value="ddim_uniform">ddim_uniform</option>
+            </select>
+          </div>
+          <div>
+            <label>Denoise</label>
+            <input id="denoise2" type="number" min="0" max="1" step="0.01" value="0.51" />
+          </div>
+        </div>
+      </div>
+
+      <div class="accentBorder block">
+        <h3>FreeU</h3>
+        <div class="row row3">
+          <div>
+            <label>b1</label>
+            <input id="freeu_b1" type="number" min="0" max="5" step="0.01" value="1.3" />
+          </div>
+          <div>
+            <label>b2</label>
+            <input id="freeu_b2" type="number" min="0" max="5" step="0.01" value="1.4" />
+          </div>
+          <div>
+            <label>s1</label>
+            <input id="freeu_s1" type="number" min="0" max="5" step="0.01" value="0.9" />
+          </div>
+        </div>
+        <div class="row nums2" style="margin-top:10px;">
+          <div>
+            <label>s2</label>
+            <input id="freeu_s2" type="number" min="0" max="5" step="0.01" value="0.2" />
+          </div>
+          <div class="helpLine">applied to the workflow's FreeU node</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modalFooter">
+      <button id="btnResetParams" class="ghost"><i class="fa-solid fa-rotate-left"></i><span>Reset</span></button>
+      <button id="btnSaveParams" class="cta"><i class="fa-solid fa-check"></i><span>Save</span></button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal: settings -->
+<div class="modal" id="settingsModal">
+  <div class="modalInner" style="max-width: min(720px, 96vw); height:auto; max-height: min(92vh, 720px);">
+    <div class="modalBar">
+      <div class="mono">Settings</div>
+      <div class="btns">
+        <button id="settingsClose"><i class="fa-solid fa-xmark"></i><span>Close</span></button>
+      </div>
+    </div>
+
+    <div class="modalBody">
+      <div class="accentBorder block">
+        <h3>Connection</h3>
+        <div class="row row3">
+          <div style="grid-column: span 2;">
+            <label for="baseUrl">ComfyUI URL <span class="q" title="Base URL for your ComfyUI server.">?</span></label>
+            <input id="baseUrl" type="text" value="http://127.0.0.1:8188" />
+          </div>
+          <div>
+            <label>&nbsp;</label>
+            <button id="btnPing" title="Ping ComfyUI">
+              <i class="fa-solid fa-satellite-dish"></i><span>Ping</span>
+            </button>
+          </div>
+        </div>
+        <div class="row" style="margin-top:10px;">
+          <div class="status compact" title="Connection status">
+            <span class="dot" id="connDot_clone"></span>
+            <span id="connText_clone">disconnected</span>
+            <span class="mono" id="connDetail_clone"></span>
+          </div>
+          <div class="helpLine" style="align-self:center;">Uses <span class="mono">/queue</span> to verify the server.</div>
+        </div>
+      </div>
+
+      <div class="accentBorder block">
+        <h3>Appearance</h3>
+        <div class="row row3">
+          <div>
+            <label>Accent color <span class="q" title="UI highlight color used across the app.">?</span></label>
+            <input id="accentColor" type="color" value="#7fb5ff" style="height:42px;padding:6px;" />
+          </div>
+          <div class="helpLine" style="grid-column: span 2; align-self:end;">
+            Applied immediately and saved locally in this browser.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modalFooter">
+      <button id="settingsSave" class="cta"><i class="fa-solid fa-check"></i><span>Save</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const WORKFLOW = {
+    "1": {
+      "inputs": {
+        "ckpt_name": "Illu\\waiNSFWIllustrious_v140.safetensors"
+      },
+      "class_type": "CheckpointLoaderSimple",
+      "_meta": {
+        "title": "Load Checkpoint"
+      }
+    },
+    "2": {
+      "inputs": {
+        "b1": 1.3,
+        "b2": 1.4,
+        "s1": 0.9,
+        "s2": 0.2,
+        "model": [
+          "6",
+          0
+        ]
+      },
+      "class_type": "FreeU_V2",
+      "_meta": {
+        "title": "FreeU_V2"
+      }
+    },
+    "3": {
+      "inputs": {
+        "add_noise": true,
+        "noise_seed": 791,
+        "cfg": 5.5,
+        "model": [
+          "2",
+          0
+        ],
+        "positive": [
+          "5",
+          0
+        ],
+        "negative": [
+          "4",
+          0
+        ],
+        "sampler": [
+          "16",
+          0
+        ],
+        "sigmas": [
+          "17",
+          0
+        ],
+        "latent_image": [
+          "25",
+          0
+        ]
+      },
+      "class_type": "SamplerCustom",
+      "_meta": {
+        "title": "SamplerCustom"
+      }
+    },
+    "4": {
+      "inputs": {
+        "text": "worst quality, low quality, lowres, signature, username, logo, artist name, artist logo",
+        "clip": [
+          "1",
+          1
+        ]
+      },
+      "class_type": "CLIPTextEncode",
+      "_meta": {
+        "title": "CLIP Text Encode (Prompt)"
+      }
+    },
+    "5": {
+      "inputs": {
+        "text": "__ARTIST__, masterpiece, best quality, amazing quality, 1girl,",
+        "clip": [
+          "1",
+          1
+        ]
+      },
+      "class_type": "CLIPTextEncodeBREAK",
+      "_meta": {
+        "title": "CLIP Text Encode (BREAK)"
+      }
+    },
+    "6": {
+      "inputs": {
+        "model": [
+          "1",
+          0
+        ]
+      },
+      "class_type": "Mahiro",
+      "_meta": {
+        "title": "(\u3002\u30fb\u03c9\u30fb\u3002)"
+      }
+    },
+    "8": {
+      "inputs": {
+        "add_noise": false,
+        "noise_seed": 80085,
+        "cfg": 5.5,
+        "model": [
+          "10",
+          0
+        ],
+        "positive": [
+          "5",
+          0
+        ],
+        "negative": [
+          "4",
+          0
+        ],
+        "sampler": [
+          "16",
+          0
+        ],
+        "sigmas": [
+          "18",
+          0
+        ],
+        "latent_image": [
+          "24:22",
+          0
+        ]
+      },
+      "class_type": "SamplerCustom",
+      "_meta": {
+        "title": "SamplerCustom"
+      }
+    },
+    "10": {
+      "inputs": {
+        "block_number": 4,
+        "downscale_factor": 1.75,
+        "start_percent": 0,
+        "end_percent": 0.25,
+        "downscale_after_skip": true,
+        "downscale_method": "bislerp",
+        "upscale_method": "bislerp",
+        "model": [
+          "2",
+          0
+        ]
+      },
+      "class_type": "PatchModelAddDownscale",
+      "_meta": {
+        "title": "Deep Shrink"
+      }
+    },
+    "11": {
+      "inputs": {
+        "samples": [
+          "3",
+          0
+        ],
+        "vae": [
+          "1",
+          2
+        ]
+      },
+      "class_type": "VAEDecode",
+      "_meta": {
+        "title": "VAE Decode"
+      }
+    },
+    "12": {
+      "inputs": {
+        "images": [
+          "11",
+          0
+        ]
+      },
+      "class_type": "PreviewImage",
+      "_meta": {
+        "title": "Preview Image"
+      }
+    },
+    "13": {
+      "inputs": {
+        "images": [
+          "14",
+          0
+        ]
+      },
+      "class_type": "PreviewImage",
+      "_meta": {
+        "title": "Preview Image"
+      }
+    },
+    "14": {
+      "inputs": {
+        "samples": [
+          "8",
+          0
+        ],
+        "vae": [
+          "1",
+          2
+        ]
+      },
+      "class_type": "VAEDecode",
+      "_meta": {
+        "title": "VAE Decode"
+      }
+    },
+    "16": {
+      "inputs": {
+        "sampler_name": "er_sde"
+      },
+      "class_type": "KSamplerSelect",
+      "_meta": {
+        "title": "KSamplerSelect"
+      }
+    },
+    "17": {
+      "inputs": {
+        "scheduler": "kl_optimal",
+        "steps": 28,
+        "denoise": 1,
+        "model": [
+          "2",
+          0
+        ]
+      },
+      "class_type": "BasicScheduler",
+      "_meta": {
+        "title": "First Pass Scheduler"
+      }
+    },
+    "18": {
+      "inputs": {
+        "scheduler": "karras",
+        "steps": 20,
+        "denoise": 0.51,
+        "model": [
+          "10",
+          0
+        ]
+      },
+      "class_type": "BasicScheduler",
+      "_meta": {
+        "title": "Second Pass Scheduler"
+      }
+    },
+    "24:21": {
+      "inputs": {
+        "model_name": "RealESRGAN_x2.pth"
+      },
+      "class_type": "UpscaleModelLoader",
+      "_meta": {
+        "title": "Load Upscale Model"
+      }
+    },
+    "24:20": {
+      "inputs": {
+        "upscale_model": [
+          "24:21",
+          0
+        ],
+        "image": [
+          "11",
+          0
+        ]
+      },
+      "class_type": "ImageUpscaleWithModel",
+      "_meta": {
+        "title": "Upscale Image (using Model)"
+      }
+    },
+    "24:23": {
+      "inputs": {
+        "upscale_method": "nearest-exact",
+        "scale_by": 0.72,
+        "image": [
+          "24:20",
+          0
+        ]
+      },
+      "class_type": "ImageScaleBy",
+      "_meta": {
+        "title": "Upscale Image By"
+      }
+    },
+    "24:22": {
+      "inputs": {
+        "pixels": [
+          "24:23",
+          0
+        ],
+        "vae": [
+          "1",
+          2
+        ]
+      },
+      "class_type": "VAEEncode",
+      "_meta": {
+        "title": "VAE Encode"
+      }
+    },
+    "25": {
+      "inputs": {
+        "dimensions": " 832 x 1216  (portrait)",
+        "clip_scale": 2,
+        "batch_size": 1
+      },
+      "class_type": "SDXL Empty Latent Image (rgthree)",
+      "_meta": {
+        "title": "SDXL Empty Latent Image (rgthree)"
+      }
+    }
+  };
+
+
+  const SDXL_PRESETS = [
+    { label: "832 x 1216 (portrait)", v: " 832 x 1216  (portrait)" },
+    { label: "768 x 1344 (portrait)", v: " 768 x 1344  (portrait)" },
+    { label: "896 x 1152 (portrait)", v: " 896 x 1152  (portrait)" },
+    { label: "1024 x 1024 (square)",  v: " 1024 x 1024  (square)" },
+    { label: "1152 x 896 (landscape)", v: " 1152 x 896  (landscape)" },
+    { label: "1216 x 832 (landscape)", v: " 1216 x 832  (landscape)" },
+    { label: "1344 x 768 (landscape)", v: " 1344 x 768  (landscape)" },
+    { label: "1536 x 640 (wide)",      v: " 1536 x 640  (wide)" },
+    { label: "640 x 1536 (tall)",      v: " 640 x 1536  (tall)" }
+  ];
+
+  const SAMPLERS = [
+    "euler","euler_ancestral","heun","dpm_2","dpm_2_ancestral","lms",
+    "dpm_fast","dpm_adaptive","dpmpp_2s_ancestral","dpmpp_sde","dpmpp_sde_gpu",
+    "dpmpp_2m","dpmpp_2m_sde","dpmpp_2m_sde_gpu","ddim","uni_pc","uni_pc_bh2",
+    "er_sde"
+  ];
+
+  const $ = (id) => document.getElementById(id);
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+  const clamp = (n,a,b)=>Math.min(b,Math.max(a,n));
+  const deepClone = (o)=>JSON.parse(JSON.stringify(o));
+
+  function toast(msg){
+    const t = $("toast");
+    t.textContent = msg;
+    t.classList.add("on");
+    clearTimeout(t._to);
+    t._to = setTimeout(()=>t.classList.remove("on"), 900);
+  }
+
+  async function copyText(s){
+    try{ await navigator.clipboard.writeText(String(s||"")); toast("copied"); }
+    catch{ toast("copy failed"); }
+  }
+
+  async function downloadImage(url, filename){
+    if(!url) return toast("no image yet");
+    try{
+      const res = await fetch(url);
+      if(!res.ok) throw new Error(String(res.status));
+      const blob = await res.blob();
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = filename || "image.png";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(()=>URL.revokeObjectURL(a.href), 1200);
+      toast("downloaded");
+    }catch{
+      toast("download failed");
+    }
+  }
+
+  function removeJob(job){
+    jobs = jobs.filter(j => j !== job);
+    renderGallery();
+  }
+
+
+  const CLIENT_ID = crypto.randomUUID();
+
+  function base(){ return $("baseUrl").value.replace(/\/+$/,""); }
+
+  function setConn(state, text, detail=""){
+    $("connDot").className = "dot" + (state ? " " + state : "");
+    $("connText").textContent = text;
+    $("connDetail").textContent = detail;
+    const cd = document.getElementById("connDot_clone");
+    const ct = document.getElementById("connText_clone");
+    const cdt = document.getElementById("connDetail_clone");
+    if(cd) cd.className = $("connDot").className;
+    if(ct) ct.textContent = text;
+    if(cdt) cdt.textContent = detail;
+  }
+  function setRunState(state, text, detail=""){
+    $("runDot").className = "dot" + (state ? " " + state : "");
+    $("runText").textContent = text;
+    $("runDetail").textContent = detail;
+    $("runDetailTop").textContent = detail;
+  }
+  function setSpinning(on){
+    $("spin").className = "spinner" + (on ? " on" : "");
+  }
+
+  async function apiGET(path){
+    const res = await fetch(base() + path, { method:"GET" });
+    if(!res.ok) throw new Error(`GET ${path} -> ${res.status}`);
+    return res.json();
+  }
+  async function apiPOST(path, body){
+    const res = await fetch(base() + path, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify(body ?? {})
+    });
+    if(!res.ok){
+      const t = await res.text().catch(()=> "");
+      throw new Error(`POST ${path} -> ${res.status} ${t}`);
+    }
+    return res.json().catch(()=> ({}));
+  }
+
+  async function ping(){
+    try{
+      await apiGET("/queue");
+      setConn("ok","connected","");
+      return true;
+    }catch(e){
+      setConn("bad","disconnected", e.message || String(e));
+      return false;
+    }
+  }
+
+  async function fetchCheckpoints(){
+    try{
+      const oi = await apiGET("/object_info");
+      const ck = oi?.CheckpointLoaderSimple?.input?.required?.ckpt_name?.[0];
+      if(Array.isArray(ck) && ck.length) return ck;
+    }catch(_){}
+    try{
+      const x = await apiGET("/models/checkpoints");
+      if(Array.isArray(x) && x.length) return x.map(v => (v.name ?? v));
+      if(Array.isArray(x?.models)) return x.models.map(v => (v.name ?? v));
+    }catch(_){}
+    return [WORKFLOW["1"]?.inputs?.ckpt_name ?? ""].filter(Boolean);
+  }
+
+  function parseArtistLines(text){
+    return text.split(/\r?\n/g).map(s=>s.trim()).filter(s=>s && !s.startsWith("#"));
+  }
+  function refreshArtistSelect(){
+    const lines = parseArtistLines($("artistLines").value);
+    const sel = $("artistSelect");
+    const prev = sel.value;
+    sel.innerHTML = "";
+    if(!lines.length){
+      const o=document.createElement("option");
+      o.value=""; o.textContent="(none)";
+      sel.appendChild(o);
+    }else{
+      for(const line of lines){
+        const o=document.createElement("option");
+        o.value=line; o.textContent=line;
+        sel.appendChild(o);
+      }
+    }
+    if(prev && [...sel.options].some(o=>o.value===prev)) sel.value=prev;
+  }
+
+  function presetInit(){
+    const sp=$("sizePreset");
+    sp.innerHTML="";
+    for(const p of SDXL_PRESETS){
+      const o=document.createElement("option");
+      o.value=p.v; o.textContent=p.label;
+      sp.appendChild(o);
+    }
+    const wfDim = WORKFLOW["25"]?.inputs?.dimensions;
+    if(wfDim && SDXL_PRESETS.some(p=>p.v===wfDim)) sp.value=wfDim;
+  }
+
+  function samplerInit(){
+    const s = $("samplerName");
+    s.innerHTML = "";
+    for(const name of SAMPLERS){
+      const o=document.createElement("option");
+      o.value=name; o.textContent=name;
+      s.appendChild(o);
+    }
+    const cur = WORKFLOW["16"]?.inputs?.sampler_name || "er_sde";
+    if(SAMPLERS.includes(cur)) s.value = cur;
+  }
+
+  function applyMacro(posText, artistLine){
+    const mode = $("macroMode").value;
+    const target = ($("macroTarget").value || "__ARTIST__").trim();
+    if(!artistLine?.trim()) return posText;
+
+    if(mode === "replace"){
+      return posText.includes(target) ? posText.split(target).join(artistLine) : `${artistLine}, ${posText}`;
+    }
+    if(mode === "prefix") return `${artistLine}, ${posText}`;
+    if(mode === "suffix") return `${posText}, ${artistLine}`;
+    return posText;
+  }
+
+  function parsePresetDims(presetValue){
+    const m = String(presetValue).match(/(\d+)\s*x\s*(\d+)/i);
+    if(!m) return { w: null, h: null };
+    return { w: parseInt(m[1],10), h: parseInt(m[2],10) };
+  }
+
+  function updateScaleInfo(){
+    const { w, h } = parsePresetDims($("sizePreset").value);
+    const down = Number($("downscale2x").value);
+    const eff = ($("toggleSecondPass").checked && ($("toggleUpscale")?.checked ?? true)) ? 2 * (Number.isFinite(down) ? down : 0) : 1;
+    if(!w || !h || !Number.isFinite(eff) || eff <= 0){
+      $("scaleInfo").textContent = "final: —";
+      $("scaleInfo2").textContent = "effective: —";
+      return;
+    }
+    const fw = Math.max(1, Math.round(w * eff));
+    const fh = Math.max(1, Math.round(h * eff));
+    $("scaleInfo").textContent = `final: ${fw} × ${fh}`;
+    $("scaleInfo2").textContent = `effective: ${(eff).toFixed(2)}× (2× * ${(down).toFixed(2)})`;
+  }
+
+  function syncSecondPassUI(){
+    const on = $("toggleSecondPass").checked;
+    $("cfg2").disabled = !on;
+    $("cfg2Label").style.opacity = on ? "1" : ".55";
+    $("secondPassBlock").style.display = on ? "" : "none";
+    const up = $("toggleUpscale");
+    if(up) up.disabled = !on;
+    updateScaleInfo();
+  }
+
+  function makeCardPreviewText({artistLine, sizeLabel, batch, cfg1, cfg2, token, patchedPos, seed1, seed2, effScale, finalSizeLabel, sampler, steps1, steps2}){
+    const lines = [];
+    lines.push(`size:   ${sizeLabel}`);
+    lines.push(`final:  ${finalSizeLabel}`);
+    lines.push(`scale:  ${effScale}`);
+    lines.push(`batch:  ${batch}`);
+    lines.push(`cfg:    ${cfg1}${cfg2 != null ? " / " + cfg2 : ""}`);
+    lines.push(`sampler:${sampler}`);
+    lines.push(`steps:  ${steps1}${steps2 != null ? " / " + steps2 : ""}`);
+    lines.push(`token:  ${token}`);
+    lines.push(`artist: ${artistLine || "(none)"}`);
+    lines.push(`seed:   ${seed1}${seed2 != null ? " / " + seed2 : ""}`);
+    lines.push("");
+    lines.push("pos(patched):");
+    lines.push(patchedPos);
+    return lines.join("\n");
+  }
+
+  function stripSecondPass(wf){
+    const kill = ["8","14","13","18","24:20","24:21","24:22","24:23"];
+    for(const k of kill) delete wf[k];
+    return wf;
+  }
+
+  function buildPatchedWorkflow({artistLine, seed1, seed2}){
+    const wf = deepClone(WORKFLOW);
+
+    const ckpt = $("ckptSelect").value;
+    if(wf["1"]?.inputs) wf["1"].inputs.ckpt_name = ckpt;
+
+    const sizeStr = $("sizePreset").value;
+    const batchSize = clamp(parseInt($("batchSize").value || "1",10), 1, 64);
+    if(wf["25"]?.inputs){
+      wf["25"].inputs.dimensions = sizeStr;
+      wf["25"].inputs.batch_size = batchSize;
+    }
+
+    const posText = $("posPrompt").value.trim();
+    const negText = $("negPrompt").value.trim();
+    const patchedPos = applyMacro(posText, artistLine);
+    if(wf["4"]?.inputs) wf["4"].inputs.text = negText;
+    if(wf["5"]?.inputs) wf["5"].inputs.text = patchedPos;
+
+    const cfg1 = Number($("cfg1").value);
+    const cfg2 = Number($("cfg2").value);
+    if(wf["3"]?.inputs) wf["3"].inputs.cfg = cfg1;
+    if(wf["8"]?.inputs) wf["8"].inputs.cfg = cfg2;
+
+    if(wf["3"]?.inputs) wf["3"].inputs.noise_seed = Math.trunc(seed1);
+    if(wf["8"]?.inputs) wf["8"].inputs.noise_seed = Math.trunc(seed2);
+
+    const sampler = $("samplerName").value || (WORKFLOW["16"]?.inputs?.sampler_name ?? "er_sde");
+    if(wf["16"]?.inputs) wf["16"].inputs.sampler_name = sampler;
+
+    if(wf["17"]?.inputs){
+      wf["17"].inputs.steps = clamp(parseInt($("steps1").value||"28",10), 1, 200);
+      wf["17"].inputs.scheduler = $("sched1").value || "kl_optimal";
+      wf["17"].inputs.denoise = clamp(Number($("denoise1").value||"1"), 0, 1);
+    }
+    if(wf["18"]?.inputs){
+      wf["18"].inputs.steps = clamp(parseInt($("steps2").value||"20",10), 1, 200);
+      wf["18"].inputs.scheduler = $("sched2").value || "karras";
+      wf["18"].inputs.denoise = clamp(Number($("denoise2").value||"0.51"), 0, 1);
+    }
+
+    if(wf["2"]?.inputs){
+      wf["2"].inputs.b1 = Number($("freeu_b1").value);
+      wf["2"].inputs.b2 = Number($("freeu_b2").value);
+      wf["2"].inputs.s1 = Number($("freeu_s1").value);
+      wf["2"].inputs.s2 = Number($("freeu_s2").value);
+    }
+
+    const secondPassOn = $("toggleSecondPass").checked;
+    const doUpscale = $("toggleUpscale")?.checked ?? true;
+    const down = clamp(Number($("downscale2x").value || "0.72"), 0.10, 1.20);
+
+    if(!secondPassOn){
+      stripSecondPass(wf);
+      return { wf, patchedPos, cfg1, cfg2: null, batchSize, sizeStr, sampler };
+    }
+
+    if(!doUpscale){
+      if(wf["24:22"]?.inputs) wf["24:22"].inputs.pixels = ["11",0];
+      delete wf["24:20"];
+      delete wf["24:21"];
+      delete wf["24:23"];
+    }else{
+      if(wf["24:23"]?.inputs) wf["24:23"].inputs.scale_by = down;
+    }
+
+
+    return { wf, patchedPos, cfg1, cfg2, batchSize, sizeStr, sampler };
+  }
+
+  async function queuePrompt(wf){
+    return apiPOST("/prompt", { prompt: wf, client_id: CLIENT_ID });
+  }
+
+  function wsURL(){
+    const u = new URL(base());
+    const proto = (u.protocol === "https:") ? "wss:" : "ws:";
+    return `${proto}//${u.host}/ws?clientId=${encodeURIComponent(CLIENT_ID)}`;
+  }
+
+  function makeViewURL(im){
+    const q = new URLSearchParams();
+    q.set("filename", im.filename);
+    if(im.type) q.set("type", im.type);
+    if(im.subfolder) q.set("subfolder", im.subfolder);
+    return base() + "/view?" + q.toString();
+  }
+
+  let jobs = [];
+
+  function renderGallery(){
+    const gal = $("gallery");
+    gal.innerHTML = "";
+    for(const job of jobs) gal.appendChild(job.cardEl);
+  }
+
+  function escapeHtml(s){
+    return String(s)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  
+  function createJobCard({artistLine, promptText, previewText, passLabel, onSave, onDelete, onCopy}){
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const img = document.createElement("img");
+    img.alt = artistLine || "result";
+    img.src = "";
+
+    const meta = document.createElement("div");
+    meta.className = "meta";
+
+    const top = document.createElement("div");
+    top.className = "metaTop";
+
+    const left = document.createElement("div");
+    left.className = "tagline";
+    left.innerHTML = `<div class="tagline"><b>style</b> ${escapeHtml(artistLine || "(none)")}</div>`;
+
+    const actions = document.createElement("div");
+    actions.className = "metaActions";
+
+    const btnSave = document.createElement("button");
+    btnSave.className = "iconBtn";
+    btnSave.title = "Download image";
+    btnSave.innerHTML = `<i class="fa-solid fa-download"></i>`;
+    btnSave.addEventListener("click", (e)=>{ e.stopPropagation(); onSave?.(); });
+
+    const btnDel = document.createElement("button");
+    btnDel.className = "iconBtn";
+    btnDel.title = "Remove from gallery";
+    btnDel.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+    btnDel.classList.add("hide");
+    btnDel.addEventListener("click", (e)=>{ e.stopPropagation(); onDelete?.(); });
+
+    actions.appendChild(btnSave);
+    actions.appendChild(btnDel);
+
+    top.appendChild(left);
+    top.appendChild(actions);
+
+    const passLine = document.createElement("div");
+    passLine.className = "tagline";
+    passLine.innerHTML = `<b>stage</b> <span class="progressPill"><span data-pass>${escapeHtml(passLabel)}</span><span class="mono" data-prog></span></span>`;
+
+    const prompt = document.createElement("div");
+    prompt.className = "promptLine";
+    prompt.title = "Click to copy prompt";
+    prompt.textContent = promptText || "";
+    prompt.addEventListener("click", ()=> onCopy?.());
+
+    const ptxt = document.createElement("div");
+    ptxt.className = "previewText";
+    ptxt.textContent = previewText;
+
+    meta.appendChild(top);
+    meta.appendChild(passLine);
+    meta.appendChild(prompt);
+    meta.appendChild(ptxt);
+
+    card.appendChild(img);
+    card.appendChild(meta);
+
+    return { card, img, passSpan: meta.querySelector("[data-pass]"), progSpan: meta.querySelector("[data-prog]"), delBtn: btnDel };
+  }
+
+
+  let ws = null;
+  let abortCtl = null;
+  let currentJob = null;
+
+  function closeWS(){
+    try{ ws?.close(); }catch(_){}
+    ws = null;
+  }
+
+
+  function openSettings(){
+    $("settingsModal").classList.add("on");
+    $("accentColor").value = (localStorage.getItem("bumfy_accent") || getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#7fb5ff");
+    $("baseUrl").value = localStorage.getItem("bumfy_baseUrl") || $("baseUrl").value;
+    setConn($("connDot").className.split(" ").slice(1).join(" "), $("connText").textContent, $("connDetail").textContent);
+  }
+  function closeSettings(){ $("settingsModal").classList.remove("on"); }
+
+  function applyAccent(hex){
+    const v = (hex || "").trim() || "#7fb5ff";
+    document.documentElement.style.setProperty("--accent", v);
+  }
+
+  let queueTimer = null;
+  async function refreshQueue(){
+    try{
+      const q = await apiGET("/queue");
+      $("queueText").textContent = JSON.stringify(q, null, 2);
+      return true;
+    }catch(e){
+      $("queueText").textContent = `queue error: ${e.message || String(e)}`;
+      return false;
+    }
+  }
+  function setQueueOpen(on){
+    const p = $("queuePanel");
+    if(on){
+      p.classList.add("on");
+      refreshQueue();
+      if($("toggleQueueAuto").checked){
+        clearInterval(queueTimer);
+        queueTimer = setInterval(()=>{ if(p.classList.contains("on")) refreshQueue(); }, 1500);
+      }
+    }else{
+      p.classList.remove("on");
+      clearInterval(queueTimer);
+      queueTimer = null;
+    }
+  }
+
+
+  function connectWS(){
+    closeWS();
+    try{
+      ws = new WebSocket(wsURL());
+      ws.onmessage = (ev) => {
+        if(!currentJob) return;
+        let msg;
+        try{ msg = JSON.parse(ev.data); }catch(_){ return; }
+
+        if(msg?.type === "executed" && msg?.data?.output?.images?.length){
+          const node = String(msg.data.node || "");
+          const im = msg.data.output.images[0];
+          const url = makeViewURL(im);
+
+          if(node === "12"){
+            currentJob.previewUrl = url;
+            currentJob.imgEl.src = url;
+            currentJob.passSpan.textContent = currentJob.isSecondPass ? "1st pass" : "final";
+            if(!currentJob.isSecondPass){
+              finishJobOk(currentJob);
+            }
+          }else if(node === "13"){
+            currentJob.finalUrl = url;
+            currentJob.imgEl.src = url;
+            currentJob.passSpan.textContent = "final";
+            finishJobOk(currentJob);
+          }
+        }
+
+        if(msg?.type === "progress" && typeof msg?.data?.value === "number"){
+          if(currentJob?.progSpan) currentJob.progSpan.textContent = `${msg.data.value}/${msg.data.max}`;
+          setRunState("warn","running","");
+        }
+      };
+    }catch(_){
+      ws = null;
+    }
+  }
+
+  function finishJobOk(job){
+    setSpinning(false);
+    setRunState("ok","done","");
+    $("btnStop").disabled = true;
+    $("btnStopAll").disabled = true;
+    if(job?.delBtn) job.delBtn.classList.remove("hide");
+    if(job?.progSpan) job.progSpan.textContent = "";
+    currentJob = null;
+  }
+
+  async function fetchHistory(promptId){
+    const h = await apiGET(`/history/${encodeURIComponent(promptId)}`);
+    return h?.[promptId] || null;
+  }
+  function findPreviewImage(entry, nodeId){
+    const out = entry?.outputs?.[nodeId];
+    const im = out?.images?.[0];
+    return im ? makeViewURL(im) : null;
+  }
+
+  function computeSeedsForRun(){
+    const mode = $("seedMode").value;
+    const baseSeedInput = Number($("seedBase").value);
+    const offset = Number($("seedOffset").value);
+    const jitterMax = clamp(parseInt($("seedJitter").value||"0",10), 0, 999999);
+
+    if(mode === "random"){
+      const base = Math.floor(Math.random() * 2147483647);
+      return { seed1: base, seed2: base + (Number.isFinite(offset) ? offset : 1) };
+    }
+
+    const base = Number.isFinite(baseSeedInput) ? Math.trunc(baseSeedInput) : 791;
+    const j = jitterMax ? Math.floor(Math.random() * (jitterMax + 1)) : 0;
+    const baseJ = base + j;
+
+    const off = Number.isFinite(offset) ? Math.trunc(offset) : 1;
+    return { seed1: baseJ, seed2: baseJ + off };
+  }
+
+  async function interruptComfy(){
+    const attempts = [
+      () => apiPOST("/interrupt", {}),
+      () => apiPOST("/queue/interrupt", {}),
+      () => apiPOST("/stop", {})
+    ];
+    for(const fn of attempts){
+      try{ await fn(); return true; }catch(_){}
+    }
+    return false;
+  }
+
+  async function clearComfyQueue(){
+    const attempts = [
+      () => apiPOST("/queue/clear", {}),
+      () => apiPOST("/queue", { clear: true }),
+      () => apiPOST("/clear_queue", {})
+    ];
+    for(const fn of attempts){
+      try{ await fn(); return true; }catch(_){}
+    }
+    return false;
+  }
+
+  async function runOne(artistLine){
+    if(!(await ping())) return;
+
+    abortCtl = new AbortController();
+    $("btnStop").disabled = false;
+    $("btnStopAll").disabled = false;
+    setSpinning(true);
+    setRunState("warn","queueing","");
+
+    connectWS();
+
+    const sizeLabel = $("sizePreset").selectedOptions[0]?.textContent || $("sizePreset").value.trim();
+    const batch = $("batchSize").value;
+    const cfg1 = $("cfg1").value, cfg2 = $("toggleSecondPass").checked ? $("cfg2").value : null;
+    const token = ($("macroTarget").value || "__ARTIST__").trim();
+    const sampler = $("samplerName").value;
+    const steps1 = $("steps1").value;
+    const steps2 = $("toggleSecondPass").checked ? $("steps2").value : null;
+
+    const { w, h } = parsePresetDims($("sizePreset").value);
+    const down = Number($("downscale2x").value);
+    const eff = ($("toggleSecondPass").checked && ($("toggleUpscale")?.checked ?? true)) ? 2 * (Number.isFinite(down) ? down : 0) : 1;
+    const finalW = (w && eff) ? Math.max(1, Math.round(w * eff)) : null;
+    const finalH = (h && eff) ? Math.max(1, Math.round(h * eff)) : null;
+    const finalSizeLabel = (finalW && finalH) ? `${finalW} x ${finalH}` : "—";
+    const effScale = Number.isFinite(eff) ? `${eff.toFixed(2)}x` : "—";
+
+    const { seed1, seed2 } = computeSeedsForRun();
+
+    const { wf, patchedPos } = buildPatchedWorkflow({ artistLine, seed1, seed2 });
+
+    const previewText = makeCardPreviewText({
+      artistLine, sizeLabel, finalSizeLabel, effScale,
+      batch, cfg1, cfg2, token, patchedPos, seed1, seed2: $("toggleSecondPass").checked ? seed2 : null,
+      sampler, steps1, steps2
+    });
+
+    const job = {
+      artistLine,
+      promptText: patchedPos,
+      previewText,
+      imgEl: null,
+      passSpan: null,
+      progSpan: null,
+      delBtn: null,
+      previewUrl: null,
+      finalUrl: null,
+      cardEl: null,
+      isSecondPass: $("toggleSecondPass").checked
+    };
+
+    const ui = createJobCard({
+      artistLine,
+      promptText: patchedPos,
+      previewText,
+      passLabel: "queued",
+      onSave: ()=>downloadImage(job.finalUrl || job.previewUrl || job.imgEl?.src, `bumfy_${Date.now()}.png`),
+      onDelete: ()=>removeJob(job),
+      onCopy: ()=>copyText(patchedPos)
+    });
+
+    job.imgEl = ui.img;
+    job.passSpan = ui.passSpan;
+    job.progSpan = ui.progSpan;
+    job.delBtn = ui.delBtn;
+    job.cardEl = ui.card;
+
+    jobs.unshift(job);
+    renderGallery();
+
+    currentJob = job;
+
+    try{
+      const queued = await queuePrompt(wf);
+      const promptId = queued?.prompt_id;
+      if(!promptId) throw new Error("No prompt_id returned");
+
+      setRunState("warn","running","");
+
+      const finalNode = $("toggleSecondPass").checked ? "13" : "12";
+      const previewNode = "12";
+
+      while(true){
+        if(abortCtl.signal.aborted) throw new Error("Aborted");
+
+        const entry = await fetchHistory(promptId);
+        if(entry?.outputs){
+          const prev = findPreviewImage(entry, previewNode);
+          const fin = findPreviewImage(entry, finalNode);
+
+          if(prev && !job.previewUrl){
+            job.previewUrl = prev;
+            if(!job.imgEl.src) job.imgEl.src = prev;
+            job.passSpan.textContent = job.isSecondPass ? "1st pass" : "final";
+          }
+
+          if(fin){
+            job.finalUrl = fin;
+            job.imgEl.src = fin;
+            job.passSpan.textContent = "final";
+
+            setSpinning(false);
+            setRunState("ok","done","");
+            $("btnStop").disabled = true;
+            $("btnStopAll").disabled = true;
+            if(job?.delBtn) job.delBtn.classList.remove("hide");
+    if(job?.progSpan) job.progSpan.textContent = "";
+    currentJob = null;
+            break;
+          }
+        }
+        await sleep(650);
+      }
+    }catch(e){
+      setSpinning(false);
+      if(String(e?.message||e).includes("Aborted")){
+        setRunState("warn","stopped","");
+        job.passSpan.textContent = "stopped";
+      }else{
+        setRunState("bad","error", e.message || String(e));
+        job.passSpan.textContent = "error";
+      }
+      $("btnStop").disabled = true;
+      $("btnStopAll").disabled = true;
+      if(job?.delBtn) job.delBtn.classList.remove("hide");
+    if(job?.progSpan) job.progSpan.textContent = "";
+    currentJob = null;
+    }finally{
+      abortCtl = null;
+    }
+  }
+
+  async function runGrid(){
+    const lines = parseArtistLines($("artistLines").value);
+    if(!lines.length){
+      setRunState("warn","no artist lines","");
+      return;
+    }
+    const delay = clamp(parseInt($("queueDelay").value || "200",10), 0, 5000);
+
+    for(let i=0;i<lines.length;i++){
+      await runOne(lines[i]);
+      if(delay) await sleep(delay);
+    }
+  }
+
+  async function stop(){
+    if(abortCtl) abortCtl.abort();
+    await interruptComfy();
+  }
+
+  async function stopAll(){
+    await interruptComfy();
+    if(abortCtl) abortCtl.abort();
+  }
+
+  async function loadCheckpoints(){
+    const list = await fetchCheckpoints();
+    const sel = $("ckptSelect");
+    const current = WORKFLOW["1"]?.inputs?.ckpt_name || "";
+
+    sel.innerHTML="";
+    for(const name of list){
+      const o=document.createElement("option");
+      o.value=name; o.textContent=name;
+      sel.appendChild(o);
+    }
+    if(list.includes(current)) sel.value = current;
+    else sel.selectedIndex = 0;
+  }
+
+  const DEFAULT_PARAMS = {
+    sampler: WORKFLOW["16"]?.inputs?.sampler_name ?? "er_sde",
+    steps1: WORKFLOW["17"]?.inputs?.steps ?? 28,
+    sched1: WORKFLOW["17"]?.inputs?.scheduler ?? "kl_optimal",
+    denoise1: WORKFLOW["17"]?.inputs?.denoise ?? 1,
+    steps2: WORKFLOW["18"]?.inputs?.steps ?? 20,
+    sched2: WORKFLOW["18"]?.inputs?.scheduler ?? "karras",
+    denoise2: WORKFLOW["18"]?.inputs?.denoise ?? 0.51,
+    freeu_b1: WORKFLOW["2"]?.inputs?.b1 ?? 1.3,
+    freeu_b2: WORKFLOW["2"]?.inputs?.b2 ?? 1.4,
+    freeu_s1: WORKFLOW["2"]?.inputs?.s1 ?? 0.9,
+    freeu_s2: WORKFLOW["2"]?.inputs?.s2 ?? 0.2,
+    seedJitter: 0
+  };
+
+  function openModal(){ $("modal").classList.add("on"); syncSecondPassUI(); }
+  function closeModal(){ $("modal").classList.remove("on"); }
+
+  function resetParams(){
+    $("samplerName").value = DEFAULT_PARAMS.sampler;
+    $("steps1").value = DEFAULT_PARAMS.steps1;
+    $("sched1").value = DEFAULT_PARAMS.sched1;
+    $("denoise1").value = DEFAULT_PARAMS.denoise1;
+    $("steps2").value = DEFAULT_PARAMS.steps2;
+    $("sched2").value = DEFAULT_PARAMS.sched2;
+    $("denoise2").value = DEFAULT_PARAMS.denoise2;
+    $("freeu_b1").value = DEFAULT_PARAMS.freeu_b1;
+    $("freeu_b2").value = DEFAULT_PARAMS.freeu_b2;
+    $("freeu_s1").value = DEFAULT_PARAMS.freeu_s1;
+    $("freeu_s2").value = DEFAULT_PARAMS.freeu_s2;
+    $("seedJitter").value = DEFAULT_PARAMS.seedJitter;
+  }
+
+  function saveParams(){ closeModal(); }
+
+  async function init(){
+    const savedUrl = localStorage.getItem("bumfy_baseUrl");
+    if(savedUrl) $("baseUrl").value = savedUrl;
+    applyAccent(localStorage.getItem("bumfy_accent"));
+    presetInit();
+    samplerInit();
+
+    $("posPrompt").value = WORKFLOW["5"]?.inputs?.text ?? "";
+    $("negPrompt").value = WORKFLOW["4"]?.inputs?.text ?? "";
+
+    $("cfg1").value = String(WORKFLOW["3"]?.inputs?.cfg ?? 5.5);
+    $("cfg2").value = String(WORKFLOW["8"]?.inputs?.cfg ?? 5.5);
+    $("downscale2x").value = String(WORKFLOW["24:23"]?.inputs?.scale_by ?? 0.72);
+
+    resetParams();
+
+    refreshArtistSelect();
+    syncSecondPassUI();
+    updateScaleInfo();
+
+    $("btnPing").addEventListener("click", async () => {
+      const ok = await ping();
+      if(ok) await loadCheckpoints();
+    });
+
+    
+    $("btnSettings").addEventListener("click", openSettings);
+    $("settingsClose").addEventListener("click", closeSettings);
+    $("settingsSave").addEventListener("click", () => {
+      localStorage.setItem("bumfy_baseUrl", $("baseUrl").value.trim());
+      localStorage.setItem("bumfy_accent", $("accentColor").value);
+      applyAccent($("accentColor").value);
+      closeSettings();
+    });
+    $("settingsModal").addEventListener("click", (e) => { if(e.target === $("settingsModal")) closeSettings(); });
+    $("accentColor").addEventListener("input", (e)=>applyAccent(e.target.value));
+
+    $("btnQueue").addEventListener("click", ()=> setQueueOpen(!$("queuePanel").classList.contains("on")));
+    $("btnQueueClose").addEventListener("click", ()=> setQueueOpen(false));
+    $("btnQueueRefresh").addEventListener("click", refreshQueue);
+    $("toggleQueueAuto").addEventListener("change", ()=> setQueueOpen($("queuePanel").classList.contains("on")));
+
+$("btnParams").addEventListener("click", openModal);
+    $("btnRunOne").addEventListener("click", () => runOne($("artistSelect").value || ""));
+    $("btnRunGrid").addEventListener("click", runGrid);
+    $("btnStop").addEventListener("click", stop);
+    $("btnStopAll").addEventListener("click", stopAll);
+
+    $("btnClearQueue").addEventListener("click", async () => {
+      if(!(await ping())) return;
+      const ok = await clearComfyQueue();
+      setRunState(ok ? "ok" : "warn", ok ? "queue cleared" : "queue clear failed", ok ? "" : "endpoint not available");
+      await sleep(400);
+      setRunState("","idle","");
+    });
+
+    $("btnClearResults").addEventListener("click", () => {
+      jobs = [];
+renderGallery();
+      setRunState("","idle","");
+      setSpinning(false);
+    });
+
+    $("modalClose").addEventListener("click", closeModal);
+    $("modal").addEventListener("click", (e) => { if(e.target === $("modal")) closeModal(); });
+    $("btnResetParams").addEventListener("click", resetParams);
+    $("btnSaveParams").addEventListener("click", saveParams);
+
+    $("artistLines").addEventListener("input", refreshArtistSelect);
+
+    $("sizePreset").addEventListener("change", updateScaleInfo);
+    $("downscale2x").addEventListener("input", updateScaleInfo);
+    $("toggleSecondPass").addEventListener("change", syncSecondPassUI);
+    $("toggleUpscale").addEventListener("change", updateScaleInfo);
+
+    setConn("","disconnected","");
+    setRunState("","idle","");
+    renderGallery();
+
+    if(await ping()) await loadCheckpoints();
+  }
+
+  init();
+</script>
+</body>
+</html>
